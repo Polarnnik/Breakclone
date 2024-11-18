@@ -45,3 +45,15 @@ Vector2 Ball::getRandomDirection() {
     direction = Vector2Scale(direction, 0.1);
     return direction;
 }
+
+void Ball::reflectVelocity() {
+    velocity = {velocity.x, -velocity.y};
+}
+
+Vector2 Ball::getPosition() {
+    return position;
+}
+
+float Ball::getRadius() {
+    return radius;
+}

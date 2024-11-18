@@ -15,6 +15,8 @@ public:
     void render();
     void move();
     void reflectVelocity();
+    Vector2 getPosition();
+    float getRadius();
 private:
     App* m_app;
     Vector2 velocity;
