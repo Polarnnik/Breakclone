@@ -43,11 +43,13 @@ void MainScreen::render() {
 }
 
 void MainScreen::handleInput() {
-    if (IsKeyPressed(KEY_DOWN)) {
+    if (IsKeyPressed(KEY_W)) {
         moveSelection(1);
-    } else if (IsKeyPressed(KEY_UP)) {
+    }
+    if (IsKeyPressed(KEY_S)) {
         moveSelection(-1);
-    } else if (IsKeyPressed(KEY_ENTER)) {
+    }
+    if (IsKeyPressed(KEY_ENTER)) {
         executeOption();
     }
 }
@@ -59,7 +61,7 @@ void MainScreen::moveSelection(int direction) {
 
 void MainScreen::executeOption() {
     switch (m_selectedItem) {
-        case Play: m_app->changeState(std::make_shared<PlayState>(m_app));
+        case Play: m_app->changeState(std::make_unique<PlayState>(m_app));
             break;
         case Exit: CloseWindow();
             break;

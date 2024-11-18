@@ -10,7 +10,7 @@
 
 void App::init() {
     m_window.init(600, 400, "Breakout");
-    m_gameState = std::make_shared<MainScreen>(this);
+    m_gameState = std::make_unique<MainScreen>(this);
 }
 
     void App::run() {
@@ -37,6 +37,6 @@ void App::handleInput() {
     m_gameState->handleInput();
 }
 
-void App::changeState(std::shared_ptr<GameState> state) {
+void App::changeState(std::unique_ptr<GameState> state) {
     m_gameState = std::move(state);
 }

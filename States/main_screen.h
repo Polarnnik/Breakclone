@@ -32,7 +32,7 @@ private:
     };
 
     App* m_app;
-    std::array<MenuItem, 3> m_menuItems;
+    std::array<MenuItem, 2> m_menuItems;
     MenuOption m_selectedItem;
     void moveSelection(int direction);
 };

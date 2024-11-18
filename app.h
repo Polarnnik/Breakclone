@@ -14,15 +14,11 @@ class App {
 public:
     void init();
     void run();
-    void changeState(std::shared_ptr<GameState> state);
+    void changeState(std::unique_ptr<GameState> state);
 
-    enum State {
-        GameScreen,
-        Game
-    };
 private:
     Window m_window;
-    std::shared_ptr<GameState> m_gameState;
+    std::unique_ptr<GameState> m_gameState;
 
     void logic();
     void render();
