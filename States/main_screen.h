@@ -14,12 +14,12 @@
 
 class MainScreen : public  GameState {
 public:
-    MainScreen(App* app);;
+    MainScreen(App* app);
     void render() override;
     void logic() override;
     void handleInput() override;
     void initMenuItems();
-    //void executeOption();
+    void executeOption();
 private:
     enum MenuOption {
         Play,

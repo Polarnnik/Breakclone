@@ -47,6 +47,8 @@ void MainScreen::handleInput() {
         moveSelection(1);
     } else if (IsKeyPressed(KEY_UP)) {
         moveSelection(-1);
+    } else if (IsKeyPressed(KEY_ENTER)) {
+        executeOption();
     }
 }
 
@@ -55,8 +57,11 @@ void MainScreen::moveSelection(int direction) {
     m_selectedItem = static_cast<MenuOption>(newSelection);
 }
 
-/*void MainScreen::executeOption() {
+void MainScreen::executeOption() {
     switch (m_selectedItem) {
-        case Play: m_app->changeState(std::make_shared<PlayState>());
+        case Play: m_app->changeState(std::make_shared<PlayState>(m_app));
+            break;
+        case Exit: CloseWindow();
+            break;
     }
-}*/
+}
