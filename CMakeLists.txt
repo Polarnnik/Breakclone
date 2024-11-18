@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.29)
-project(Trye CXX)
+project(Breakclone CXX)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
 find_package(raylib REQUIRED)
 
@@ -13,7 +14,7 @@ endif()
 
 include_directories(${raylib_INCLUDE_DIRS})
 
-add_executable(Trye main.cpp
+add_executable(Breakclone main.cpp
         window.cpp
         window.h
         app.cpp
@@ -22,4 +23,4 @@ add_executable(Trye main.cpp
         States/main_screen.h
         States/state.h
 )
-target_link_libraries(Trye PRIVATE ${raylib_LIBRARIES})
+target_link_libraries(Breakclone PRIVATE ${raylib_LIBRARIES})
