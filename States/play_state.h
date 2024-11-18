@@ -6,6 +6,8 @@
 #define PLAY_STATE_H
 #include "state.h"
 #include "../app.h"
+#include "ball.h"
+#include <vector>
 
 
 class PlayState: public GameState{
@@ -16,6 +18,13 @@ public:
     void handleInput() override;
 private:
     App* m_app;
+
+    Rectangle paddle;
+    Ball ball;
+    std::vector<Rectangle> brics;
+
+    void initGame();
+    void checkCollisions();
 };
 
 
