@@ -1,5 +1,3 @@
-#include <iostream>
-#include "raylib/raylib.h"
 #include "app.h"
 
 int main(void)

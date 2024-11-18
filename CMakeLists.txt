@@ -3,8 +3,15 @@ project(Trye CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(RAYLIB_LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/raylib/libraylib.so")
+find_package(raylib REQUIRED)
 
+if (raylib_FOUND)
+    message(STATUS "Found raylib: ${raylib_INCLUDE_DIRS}")
+else()
+    message(FATAL_ERROR "raylib not found")
+endif()
+
+include_directories(${raylib_INCLUDE_DIRS})
 
 add_executable(Trye main.cpp
         window.cpp
@@ -15,5 +22,4 @@ add_executable(Trye main.cpp
         States/main_screen.h
         States/state.h
 )
-target_include_directories(Trye PRIVATE include)
-target_link_libraries(Trye PRIVATE ${RAYLIB_LIB_PATH})
+target_link_libraries(Trye PRIVATE ${raylib_LIBRARIES})

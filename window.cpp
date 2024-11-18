@@ -1,6 +1,6 @@
 #include "window.h"
 
-#include <raylib/raylib.h>
+#include <raylib.h>
 
 int Window::m_width = 0;
 int Window::m_height = 0;

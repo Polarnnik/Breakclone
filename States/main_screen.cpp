@@ -5,7 +5,7 @@
 #include "main_screen.h"
 
 #include "play_state.h"
-#include "raylib/raylib.h"
+#include <raylib.h>
 #include "../window.h"
 
 MainScreen::MainScreen(App* app) : m_app(app){

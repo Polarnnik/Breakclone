@@ -5,8 +5,6 @@
 #ifndef STATE_H
 #define STATE_H
 
-
-
 class GameState {
 public:
     virtual void logic() = 0;

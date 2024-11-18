@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 #include <string>
-#include <raylib/raylib.h>
+#include <raylib.h>
 
 
 class Window {

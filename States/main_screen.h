@@ -5,7 +5,7 @@
 #ifndef MAIN_SCREEN_H
 #define MAIN_SCREEN_H
 #include <memory>
-#include "raylib/raylib.h"
+#include <raylib.h>
 #include <array>
 #include "state.h"
 #include "../app.h"

@@ -4,7 +4,7 @@
 
 #include "app.h"
 
-#include <raylib/raylib.h>
+#include <raylib.h>
 
 #include "States/main_screen.h"
 
