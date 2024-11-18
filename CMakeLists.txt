@@ -24,5 +24,7 @@ add_executable(Breakclone main.cpp
         States/state.h
         States/play_state.cpp
         States/play_state.h
+        States/ball.cpp
+        States/ball.h
 )
 target_link_libraries(Breakclone PRIVATE ${raylib_LIBRARIES})
