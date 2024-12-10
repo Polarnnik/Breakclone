@@ -1,30 +1,27 @@
 //
 // Created by pola on 19.11.2024.
 //
-
 #ifndef BREAKCLONE_BALL_H
 #define BREAKCLONE_BALL_H
-
 
 #include <raylib.h>
 #include "../app.h"
 
 class Ball {
 public:
-    Ball(App* app);
+    explicit Ball(App* app);
     void render();
     void move();
     void reflectVelocity();
-    Vector2 getPosition();
-    float getRadius();
+    Vector2 getPosition() const;
+    float getRadius() const;
 private:
-    App* m_app;
+    App* const m_app;
     Vector2 velocity;
     Vector2 position;
-    float radius;
+    const float radius;
 
-    Vector2 getRandomDirection();
+    static Vector2 getRandomDirection();
 };
-
 
 #endif //BREAKCLONE_BALL_H

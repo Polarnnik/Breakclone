@@ -1,29 +1,29 @@
 //
 // Created by pola on 19.11.2024.
 //
-
 #include "ball.h"
 #include "../window.h"
 #include "main_screen.h"
-#include <cstdlib>
-#include <cmath>
-#include <ctime>
+#include <random>
+#include <chrono>
 #include <raymath.h>
 
-Ball::Ball(App* app): m_app(app) {
-    position = {static_cast<float>(Window::getWidth()) / 2 - 5, static_cast<float>(Window::getHeight()) / 2 - 5};
-    radius = 10;
-    velocity = getRandomDirection();
+Ball::Ball(App* app): 
+    m_app(app),
+    position{static_cast<float>(Window::getWidth()) / 2 - 5, static_cast<float>(Window::getHeight()) / 2 - 5},
+    radius(10.0f),
+    velocity(getRandomDirection()) {
 }
 
 void Ball::move() {
     position.x += velocity.x;
     position.y += velocity.y;
 
-    if (position.x - radius <= 0 || position.x + radius >= Window::getWidth()) {
+    constexpr float border = 0.0f;
+    if (position.x - radius <= border || position.x + radius >= Window::getWidth()) {
         velocity.x *= -1;
     }
-    if (position.y - radius <= 0) {
+    if (position.y - radius <= border) {
         velocity.y *= -1;
     }
     if (position.y - radius > Window::getHeight()) {
@@ -32,28 +32,28 @@ void Ball::move() {
 }
 
 void Ball::render() {
-    DrawCircle(position.x, position.y, radius, RED);
+    DrawCircle(static_cast<int>(position.x), static_cast<int>(position.y), radius, RED);
 }
 
 Vector2 Ball::getRandomDirection() {
-    std::srand(std::time(0));
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<float> dis(0.0f, 4.0f * PI);
     
-    float angle = static_cast<float>(std::rand()) / RAND_MAX * 4 * PI;
-
+    float angle = dis(gen);
     Vector2 direction = {std::cos(angle), std::sin(angle)};
     direction = Vector2Normalize(direction);
-    direction = Vector2Scale(direction, 0.1);
-    return direction;
+    return Vector2Scale(direction, 0.1f);
 }
 
 void Ball::reflectVelocity() {
-    velocity = {velocity.x, -velocity.y};
+    velocity.y *= -1;
 }
 
-Vector2 Ball::getPosition() {
+Vector2 Ball::getPosition() const {
     return position;
 }
 
-float Ball::getRadius() {
+float Ball::getRadius() const {
     return radius;
 }

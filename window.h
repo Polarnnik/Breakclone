@@ -3,7 +3,6 @@
 #include <string>
 #include <raylib.h>
 
-
 class Window {
 public:
     Window() = default;
@@ -15,7 +14,5 @@ public:
 private:
     static int m_width, m_height;
 };
-
-
 
 #endif //WINDOW_H

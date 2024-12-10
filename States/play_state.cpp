@@ -1,7 +1,6 @@
 //
 // Created by polarnik on 12.11.2024.
 //
-
 #include "play_state.h"
 #include "../window.h"
 #include "main_screen.h"
@@ -16,7 +15,7 @@ void PlayState::render() {
     DrawRectangleRec(paddle, RAYWHITE);
     ball.render();
 
-    for (const auto& brick : brics) {
+    for (const auto& brick : bricks) {
         DrawRectangleRec(brick, PURPLE);
     }
 }
@@ -24,12 +23,12 @@ void PlayState::render() {
 void PlayState::handleInput() {
     if (IsKeyDown(KEY_A)) {
         if (paddle.x > 0) {
-            paddle.x -= 0.2;
+            paddle.x -= PADDLE_SPEED;
         }
     }
     if (IsKeyDown(KEY_D)) {
         if (paddle.x + paddle.width < Window::getWidth()) {
-            paddle.x += 0.2;
+            paddle.x += PADDLE_SPEED;
         }
     }
 }
@@ -44,12 +43,12 @@ void PlayState::checkCollisions() {
         ball.reflectVelocity();
     }
 
-    for (auto it = brics.begin(); it != brics.end(); ) {
+    for (auto it = bricks.begin(); it != bricks.end(); ) {
         if (CheckCollisionCircleRec(ball.getPosition(), ball.getRadius(), *it)) {
             ball.reflectVelocity();
-
-            it = brics.erase(it);
-            if (brics.size() == 0) {
+            it = bricks.erase(it);
+            
+            if (bricks.empty()) {
                 m_app->changeState(std::make_unique<MainScreen>(m_app));
             }
         } else {
@@ -59,17 +58,33 @@ void PlayState::checkCollisions() {
 }
 
 void PlayState::initGame() {
-    paddle = {static_cast<float>(Window::getWidth()) / 2 - 50, static_cast<float>(Window::getHeight()) - 30, 100, 20};
+    constexpr float paddleWidth = 100.0f;
+    constexpr float paddleHeight = 20.0f;
+    constexpr float paddleY = 30.0f;
+    
+    paddle = {
+        static_cast<float>(Window::getWidth()) / 2 - paddleWidth / 2,
+        static_cast<float>(Window::getHeight()) - paddleY,
+        paddleWidth,
+        paddleHeight
+    };
 
-    brics.clear();
-    const int rows = 5;
-    const int cols = 10;
+    bricks.clear();
+    constexpr int rows = 5;
+    constexpr int cols = 10;
+    constexpr float brickSpacing = 5.0f;
+    
     const float brickWidth = static_cast<float>(Window::getWidth()) / cols;
-    const float brickHeight = 20.0f;
+    constexpr float brickHeight = 20.0f;
 
     for (int row = 0; row < rows; ++row) {
         for (int col = 0; col < cols; ++col) {
-            brics.push_back({col * brickWidth, row * brickHeight, brickWidth - 5, brickHeight - 5});
+            bricks.push_back({
+                col * brickWidth,
+                row * brickHeight,
+                brickWidth - brickSpacing,
+                brickHeight - brickSpacing
+            });
         }
     }
 }

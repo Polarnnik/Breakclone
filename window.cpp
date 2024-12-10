@@ -1,5 +1,4 @@
 #include "window.h"
-
 #include <raylib.h>
 
 int Window::m_width = 0;
@@ -23,6 +22,7 @@ void Window::close() const {
 int Window::getHeight() {
     return m_height;
 }
+
 int Window::getWidth() {
     return m_width;
 }

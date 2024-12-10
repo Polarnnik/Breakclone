@@ -6,6 +6,5 @@ int main(void)
     app.init();
     app.run();
 
-
     return 0;
 }

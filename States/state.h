@@ -1,7 +1,6 @@
 //
 // Created by polarnik on 16.10.2024.
 //
-
 #ifndef STATE_H
 #define STATE_H
 
@@ -12,7 +11,5 @@ public:
     virtual void handleInput() = 0;
     virtual ~GameState() = default;
 };
-
-
 
 #endif //STATE_H

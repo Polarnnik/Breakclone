@@ -1,11 +1,8 @@
 //
 // Created by polarnik on 13.10.2024.
 //
-
 #include "app.h"
-
 #include <raylib.h>
-
 #include "States/main_screen.h"
 
 void App::init() {

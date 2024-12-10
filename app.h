@@ -1,7 +1,6 @@
 //
 // Created by polarnik on 13.10.2024.
 //
-
 #ifndef APP_H
 #define APP_H
 #include <memory>
@@ -24,7 +23,5 @@ private:
     void render();
     void handleInput();
 };
-
-
 
 #endif //APP_H
