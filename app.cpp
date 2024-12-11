@@ -1,42 +1,58 @@
 //
 // Created by polarnik on 13.10.2024.
 //
-
 #include "app.h"
-
-#include <raylib.h>
-
+#include <stdexcept>
+#include "constants.h"
 #include "States/main_screen.h"
 
-void App::init() {
-    m_window.init(600, 400, "Breakout");
-    m_gameState = std::make_unique<MainScreen>(this);
-}
-
-    void App::run() {
-    while (!m_window.shouldClose()) {
-        handleInput();
-        logic();
-        render();
+void App::Init() {
+    window_.Init(BreakClone::kDefaultWindowWidth, 
+                BreakClone::kDefaultWindowHeight, 
+                "Breakout");
+    try {
+        game_state_ = std::make_unique<MainScreen>(this);
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Failed to initialize game state");
     }
-    m_window.close();
 }
 
-void App::logic() {
-    m_gameState->logic();
+void App::Run() {
+    if (!game_state_) {
+        throw std::runtime_error("Game state not initialized");
+    }
+
+    while (!window_.ShouldClose()) {
+        HandleInput();
+        Logic();
+        Render();
+    }
+    window_.Close();
 }
 
-void App::render() {
+void App::Logic() {
+    if (game_state_) {
+        game_state_->Logic();
+    }
+}
+
+void App::Render() {
     BeginDrawing();
-    m_gameState->render();
-
+    if (game_state_) {
+        game_state_->Render();
+    }
     EndDrawing();
 }
 
-void App::handleInput() {
-    m_gameState->handleInput();
+void App::HandleInput() {
+    if (game_state_) {
+        game_state_->HandleInput();
+    }
 }
 
-void App::changeState(std::unique_ptr<GameState> state) {
-    m_gameState = std::move(state);
+void App::ChangeState(std::unique_ptr<GameState> state) {
+    if (!state) {
+        throw std::invalid_argument("New game state cannot be null");
+    }
+    game_state_ = std::move(state);
 }

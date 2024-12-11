@@ -1,28 +1,38 @@
+//
+// Created by polarnik on 13.10.2024.
+//
 #include "window.h"
+#include <stdexcept>
 
-#include <raylib.h>
+int32_t Window::width_ = 0;
+int32_t Window::height_ = 0;
 
-int Window::m_width = 0;
-int Window::m_height = 0;
+void Window::Init(int32_t width, int32_t height, std::string_view title) {
+    if (width <= 0 || height <= 0) {
+        throw std::invalid_argument("Window dimensions must be positive");
+    }
 
-void Window::init(int width, int height, std::string title) {
-    InitWindow(width, height, title.c_str());
-    m_width = width;
-    m_height = height;
+    InitWindow(width, height, title.data());
+    if (!IsWindowReady()) {
+        throw std::runtime_error("Failed to initialize window");
+    }
 
+    width_ = width;
+    height_ = height;
 }
 
-bool Window::shouldClose() const {
+bool Window::ShouldClose() const noexcept {
     return WindowShouldClose();
 }
 
-void Window::close() const {
+void Window::Close() const noexcept {
     CloseWindow();
 }
 
-int Window::getHeight() {
-    return m_height;
+int32_t Window::GetHeight() noexcept {
+    return height_;
 }
-int Window::getWidth() {
-    return m_width;
+
+int32_t Window::GetWidth() noexcept {
+    return width_;
 }

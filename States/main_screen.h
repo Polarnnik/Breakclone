@@ -1,29 +1,32 @@
 //
 // Created by polarnik on 13.10.2024.
 //
+#ifndef BREAKCLONE_MAIN_SCREEN_H
+#define BREAKCLONE_MAIN_SCREEN_H
 
-#ifndef MAIN_SCREEN_H
-#define MAIN_SCREEN_H
-#include <memory>
-#include <raylib.h>
 #include <array>
+#include <string>
+#include <memory>
+#include <string_view>
+#include <raylib.h>
 #include "state.h"
 #include "../app.h"
-#include <string>
 
-
-class MainScreen : public  GameState {
+class MainScreen final : public GameState {
 public:
-    MainScreen(App* app);
-    void render() override;
-    void logic() override;
-    void handleInput() override;
-    void initMenuItems();
-    void executeOption();
+    explicit MainScreen(App* app);
+    MainScreen(const MainScreen&) = delete;
+    MainScreen& operator=(const MainScreen&) = delete;
+    ~MainScreen() override = default;
+
+    void Render() override;
+    void Logic() override;
+    void HandleInput() override;
+
 private:
-    enum MenuOption {
-        Play,
-        Exit // Represents the number of options
+    enum class MenuOption : std::uint8_t {
+        kPlay,
+        kExit
     };
 
     struct MenuItem {
@@ -31,12 +34,20 @@ private:
         Vector2 position;
     };
 
-    App* m_app;
-    std::array<MenuItem, 2> m_menuItems;
-    MenuOption m_selectedItem;
-    void moveSelection(int direction);
+    static constexpr std::size_t kMenuItemCount = 2;
+    static constexpr float kVerticalRatio = 0.4f;
+    static constexpr float kSpacingRatio = 0.1f;
+    static constexpr int32_t kTitleFontSize = 80;
+    static constexpr int32_t kMenuFontSize = 40;
+    static constexpr std::string_view kTitle = "BREAKOUT";
+
+    App* const app_;
+    std::array<MenuItem, kMenuItemCount> menu_items_;
+    MenuOption selected_item_;
+
+    void InitMenuItems() noexcept;
+    void ExecuteOption();
+    void MoveSelection(int32_t direction) noexcept;
 };
 
-
-
-#endif //MAIN_SCREEN_H
+#endif // BREAKCLONE_MAIN_SCREEN_H
