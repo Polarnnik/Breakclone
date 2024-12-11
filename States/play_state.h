@@ -1,30 +1,34 @@
 //
 // Created by polarnik on 12.11.2024.
 //
-#ifndef PLAY_STATE_H
-#define PLAY_STATE_H
+#ifndef BREAKCLONE_PLAY_STATE_H
+#define BREAKCLONE_PLAY_STATE_H
 
 #include <vector>
 #include "state.h"
 #include "../app.h"
 #include "ball.h"
+#include "../constants.h"
 
-class PlayState: public GameState {
+class PlayState final : public GameState {
 public:
     explicit PlayState(App* app);
-    void render() override;
-    void logic() override;
-    void handleInput() override;
+    PlayState(const PlayState&) = delete;
+    PlayState& operator=(const PlayState&) = delete;
+    ~PlayState() override = default;
+
+    void Render() override;
+    void Logic() override;
+    void HandleInput() override;
     
 private:
-    App* const m_app;
-    Rectangle paddle;
-    Ball ball;
-    std::vector<Rectangle> bricks;
+    App* const app_;
+    Rectangle paddle_;
+    Ball ball_;
+    std::vector<Rectangle> bricks_;
 
-    void initGame();
-    void checkCollisions();
-    static constexpr float PADDLE_SPEED = 0.2f;
+    void InitGame();
+    void CheckCollisions() noexcept;
 };
 
-#endif //PLAY_STATE_H
+#endif // BREAKCLONE_PLAY_STATE_H

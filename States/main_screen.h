@@ -1,27 +1,32 @@
 //
 // Created by polarnik on 13.10.2024.
 //
-#ifndef MAIN_SCREEN_H
-#define MAIN_SCREEN_H
+#ifndef BREAKCLONE_MAIN_SCREEN_H
+#define BREAKCLONE_MAIN_SCREEN_H
 
 #include <array>
 #include <string>
 #include <memory>
+#include <string_view>
 #include <raylib.h>
 #include "state.h"
 #include "../app.h"
 
-class MainScreen : public GameState {
+class MainScreen final : public GameState {
 public:
     explicit MainScreen(App* app);
-    void render() override;
-    void logic() override;
-    void handleInput() override;
-    
+    MainScreen(const MainScreen&) = delete;
+    MainScreen& operator=(const MainScreen&) = delete;
+    ~MainScreen() override = default;
+
+    void Render() override;
+    void Logic() override;
+    void HandleInput() override;
+
 private:
-    enum class MenuOption {
-        Play,
-        Exit
+    enum class MenuOption : std::uint8_t {
+        kPlay,
+        kExit
     };
 
     struct MenuItem {
@@ -29,13 +34,20 @@ private:
         Vector2 position;
     };
 
-    App* const m_app;
-    std::array<MenuItem, 2> m_menuItems;
-    MenuOption m_selectedItem;
+    static constexpr std::size_t kMenuItemCount = 2;
+    static constexpr float kVerticalRatio = 0.4f;
+    static constexpr float kSpacingRatio = 0.1f;
+    static constexpr int32_t kTitleFontSize = 80;
+    static constexpr int32_t kMenuFontSize = 40;
+    static constexpr std::string_view kTitle = "BREAKOUT";
 
-    void initMenuItems();
-    void executeOption();
-    void moveSelection(int direction);
+    App* const app_;
+    std::array<MenuItem, kMenuItemCount> menu_items_;
+    MenuOption selected_item_;
+
+    void InitMenuItems() noexcept;
+    void ExecuteOption();
+    void MoveSelection(int32_t direction) noexcept;
 };
 
-#endif //MAIN_SCREEN_H
+#endif // BREAKCLONE_MAIN_SCREEN_H

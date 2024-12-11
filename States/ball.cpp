@@ -1,59 +1,64 @@
 //
 // Created by pola on 19.11.2024.
 //
+#include <stdexcept>
+#include <raylib.h>
+#include <raymath.h>
 #include "ball.h"
 #include "../window.h"
 #include "main_screen.h"
-#include <random>
-#include <chrono>
-#include <raymath.h>
 
-Ball::Ball(App* app): 
-    m_app(app),
-    position{static_cast<float>(Window::getWidth()) / 2 - 5, static_cast<float>(Window::getHeight()) / 2 - 5},
-    radius(10.0f),
-    velocity(getRandomDirection()) {
-}
+std::random_device Ball::rd_;
+std::mt19937 Ball::gen_(rd_());
 
-void Ball::move() {
-    position.x += velocity.x;
-    position.y += velocity.y;
-
-    constexpr float border = 0.0f;
-    if (position.x - radius <= border || position.x + radius >= Window::getWidth()) {
-        velocity.x *= -1;
-    }
-    if (position.y - radius <= border) {
-        velocity.y *= -1;
-    }
-    if (position.y - radius > Window::getHeight()) {
-        m_app->changeState(std::make_unique<MainScreen>(m_app));
+Ball::Ball(App* app) 
+    : app_(app)
+    , position_{static_cast<float>(Window::GetWidth()) / 2.0f - BreakClone::kDefaultBallRadius / 2.0f,
+               static_cast<float>(Window::GetHeight()) / 2.0f - BreakClone::kDefaultBallRadius / 2.0f}
+    , radius_(BreakClone::kDefaultBallRadius)
+    , velocity_(GetRandomDirection()) {
+    if (!app) {
+        throw std::invalid_argument("App pointer cannot be null");
     }
 }
 
-void Ball::render() {
-    DrawCircle(static_cast<int>(position.x), static_cast<int>(position.y), radius, RED);
+void Ball::Move() noexcept {
+    position_.x += velocity_.x;
+    position_.y += velocity_.y;
+
+    const float border = 0.0f;
+    if (position_.x - radius_ <= border || position_.x + radius_ >= Window::GetWidth()) {
+        velocity_.x *= -1.0f;
+    }
+    if (position_.y - radius_ <= border) {
+        velocity_.y *= -1.0f;
+    }
+    if (position_.y - radius_ > Window::GetHeight()) {
+        try {
+            app_->ChangeState(std::make_unique<MainScreen>(app_));
+        } catch (const std::exception& e) {
+            // todo!(): Log error and handle gracefully :D
+        }
+    }
 }
 
-Vector2 Ball::getRandomDirection() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
+void Ball::Render() const noexcept {
+    DrawCircle(
+        static_cast<int32_t>(position_.x),
+        static_cast<int32_t>(position_.y),
+        radius_,
+        RED
+    );
+}
+
+Vector2 Ball::GetRandomDirection() noexcept {
     static std::uniform_real_distribution<float> dis(0.0f, 4.0f * PI);
-    
-    float angle = dis(gen);
+    const float angle = dis(gen_);
     Vector2 direction = {std::cos(angle), std::sin(angle)};
     direction = Vector2Normalize(direction);
-    return Vector2Scale(direction, 0.1f);
+    return Vector2Scale(direction, BreakClone::kDefaultBallSpeed);
 }
 
-void Ball::reflectVelocity() {
-    velocity.y *= -1;
-}
-
-Vector2 Ball::getPosition() const {
-    return position;
-}
-
-float Ball::getRadius() const {
-    return radius;
+void Ball::ReflectVelocity() noexcept {
+    velocity_.y *= -1.0f;
 }

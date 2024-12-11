@@ -4,52 +4,61 @@
 #include "play_state.h"
 #include "../window.h"
 #include "main_screen.h"
-#include <raylib.h>
+#include <stdexcept>
 
-PlayState::PlayState(App* app) : m_app(app), ball(app) {
-    initGame();
+PlayState::PlayState(App* app) 
+    : app_(app)
+    , ball_(app) {
+    if (!app) {
+        throw std::invalid_argument("App pointer cannot be null");
+    }
+    InitGame();
 }
 
-void PlayState::render() {
+void PlayState::Render() {
     ClearBackground(BLACK);
-    DrawRectangleRec(paddle, RAYWHITE);
-    ball.render();
+    DrawRectangleRec(paddle_, RAYWHITE);
+    ball_.Render();
 
-    for (const auto& brick : bricks) {
+    for (const auto& brick : bricks_) {
         DrawRectangleRec(brick, PURPLE);
     }
 }
 
-void PlayState::handleInput() {
+void PlayState::HandleInput() {
     if (IsKeyDown(KEY_A)) {
-        if (paddle.x > 0) {
-            paddle.x -= PADDLE_SPEED;
+        if (paddle_.x > 0.0f) {
+            paddle_.x -= BreakClone::kDefaultPaddleSpeed;
         }
     }
     if (IsKeyDown(KEY_D)) {
-        if (paddle.x + paddle.width < Window::getWidth()) {
-            paddle.x += PADDLE_SPEED;
+        if (paddle_.x + paddle_.width < Window::GetWidth()) {
+            paddle_.x += BreakClone::kDefaultPaddleSpeed;
         }
     }
 }
 
-void PlayState::logic() {
-    ball.move();
-    checkCollisions();
+void PlayState::Logic() {
+    ball_.Move();
+    CheckCollisions();
 }
 
-void PlayState::checkCollisions() {
-    if (CheckCollisionCircleRec(ball.getPosition(), ball.getRadius(), paddle)) {
-        ball.reflectVelocity();
+void PlayState::CheckCollisions() noexcept {
+    if (CheckCollisionCircleRec(ball_.GetPosition(), ball_.GetRadius(), paddle_)) {
+        ball_.ReflectVelocity();
     }
 
-    for (auto it = bricks.begin(); it != bricks.end(); ) {
-        if (CheckCollisionCircleRec(ball.getPosition(), ball.getRadius(), *it)) {
-            ball.reflectVelocity();
-            it = bricks.erase(it);
+    for (auto it = bricks_.begin(); it != bricks_.end(); ) {
+        if (CheckCollisionCircleRec(ball_.GetPosition(), ball_.GetRadius(), *it)) {
+            ball_.ReflectVelocity();
+            it = bricks_.erase(it);
             
-            if (bricks.empty()) {
-                m_app->changeState(std::make_unique<MainScreen>(m_app));
+            if (bricks_.empty()) {
+                try {
+                    app_->ChangeState(std::make_unique<MainScreen>(app_));
+                } catch (const std::exception& e) {
+                    // todo!(): Log error and handle gracefully :D
+                }
             }
         } else {
             ++it;
@@ -57,33 +66,25 @@ void PlayState::checkCollisions() {
     }
 }
 
-void PlayState::initGame() {
-    constexpr float paddleWidth = 100.0f;
-    constexpr float paddleHeight = 20.0f;
-    constexpr float paddleY = 30.0f;
-    
-    paddle = {
-        static_cast<float>(Window::getWidth()) / 2 - paddleWidth / 2,
-        static_cast<float>(Window::getHeight()) - paddleY,
-        paddleWidth,
-        paddleHeight
+void PlayState::InitGame() {
+    paddle_ = {
+        static_cast<float>(Window::GetWidth()) / 2.0f - BreakClone::kDefaultPaddleWidth / 2.0f,
+        static_cast<float>(Window::GetHeight()) - BreakClone::kDefaultPaddleY,
+        BreakClone::kDefaultPaddleWidth,
+        BreakClone::kDefaultPaddleHeight
     };
 
-    bricks.clear();
-    constexpr int rows = 5;
-    constexpr int cols = 10;
-    constexpr float brickSpacing = 5.0f;
-    
-    const float brickWidth = static_cast<float>(Window::getWidth()) / cols;
-    constexpr float brickHeight = 20.0f;
+    bricks_.clear();
+    const float brick_width = static_cast<float>(Window::GetWidth()) / BreakClone::kDefaultBrickCols;
 
-    for (int row = 0; row < rows; ++row) {
-        for (int col = 0; col < cols; ++col) {
-            bricks.push_back({
-                col * brickWidth,
-                row * brickHeight,
-                brickWidth - brickSpacing,
-                brickHeight - brickSpacing
+    bricks_.reserve(BreakClone::kDefaultBrickRows * BreakClone::kDefaultBrickCols);
+    for (int32_t row = 0; row < BreakClone::kDefaultBrickRows; ++row) {
+        for (int32_t col = 0; col < BreakClone::kDefaultBrickCols; ++col) {
+            bricks_.push_back({
+                col * brick_width,
+                row * BreakClone::kDefaultBrickHeight,
+                brick_width - BreakClone::kDefaultBrickSpacing,
+                BreakClone::kDefaultBrickHeight - BreakClone::kDefaultBrickSpacing
             });
         }
     }
